@@ -8,6 +8,7 @@ local Linker = require(ReplicatedStorage:WaitForChild("linker"))
 --InitScript
 local Engine = {}
 Engine.AddonService = {}
+Engine.AddonService.RunningAddons = {}
 -- Load Addons
 function Engine.AddonService:Load()
     local AddonsModule = require(Linker.Engine.Shared.Addons.Config)
@@ -26,7 +27,7 @@ function Engine.AddonService:Load()
             print("[Server] [Engine.AddonService:Load] Initializing Addon:",tostring(Addon.Config.Name))
             local success, init = pcall(function()
                 if Table["UserConfig"] then
-                    Addon.UserConfig = Table["UserConfig"]
+                    Addon.Config.User = Table["UserConfig"]
                 end
                 return Addon.Init()
             end)
@@ -34,16 +35,22 @@ function Engine.AddonService:Load()
                 print("[Server] [Engine.AddonService:Load] Successfully Initialized Addon:",tostring(Addon.Config.Name))
             else
                 print("Failed to Initialize Addon:", tostring(Addon.Config.Name))
+                return
             end
         else
             print("[Server] [Engine.AddonService:Load] Failed to load:",tostring(_))
             return
         end
 
-        UnpackagedAddons[_] = Table
+        table.insert(Engine.AddonService.RunningAddons, Addon)
     end
+end
+
+function Engine.AddonService:ReplicateToClient()
+    print("Nothing")
 end
 
 --Main/RunTime
 Engine.AddonService:Load()
 
+print("Engine.AddonService.RunningAddons:",Engine.AddonService.RunningAddons)
