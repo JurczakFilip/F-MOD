@@ -25,3 +25,8 @@ end
 --Main/RunTime
 --local Addons = Engine.AddonService:Load()
 --print("Addons:", Addons)
+
+Linker.Engine.Shared:WaitForChild("Remotes"):FindFirstChild("ReplicateAddons").OnClientEvent:Connect(function(Addon)
+    print("Recieved")
+    print(Addon)
+end)

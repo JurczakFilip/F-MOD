@@ -10,6 +10,8 @@ HelloWorld_Addon.Config.User = {
     UserMsg = nil
 }
 
+HelloWorld_Addon.Code = [[
+
 function HelloWorld_Addon:Hello()
     if RunService:IsClient() then
         print("Hello Client!")
@@ -39,4 +41,5 @@ function HelloWorld_Addon.Client:Init()
     HelloWorld_Addon:Hello()
 end
 
+]]
 return HelloWorld_Addon
