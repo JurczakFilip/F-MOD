@@ -26,7 +26,7 @@ function Engine.AddonService:Load()
                 return HttpService:GetAsync(Table["Source"])
             end) 
             if success then
-                print("[Server] [Engine.AddonService] Successfully Loaded: %s",_)
+                print(string.format("[Server] [Engine.AddonService] Successfully Loaded: %s",_))
                 break
             else
                 warn(string.format("[Server] [Engine.AddonService] Failed to load: %s, Retrying in 2 seconds...",_))
@@ -39,9 +39,19 @@ function Engine.AddonService:Load()
             return
         end
 
-        
+        success, Addon = pcall(function()
+            return loadstring(Addon)()
+        end)
+
+        if not success then
+            warn(string.format("[Server] [Engine.AddonService] Failed to unpack addon: %s", _))
+            return
+        else
+            print(string.format("[Server] [Engine.AddonService] Successfully Unpacked Addon: [%s] - %s",_, Addon.Config.Name))
+        end
     end
 end
 
 --Main/RunTime
 Engine.AddonService:Load()
+print("[Engine.AddonService.RunningAddons:",Engine.AddonService.RunningAddons)
