@@ -1,6 +1,7 @@
 --Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
 
 --Modules
 local Linker = require(ReplicatedStorage:WaitForChild("linker"))
@@ -13,7 +14,6 @@ Engine.AddonService.RunningAddons = {}
 function Engine.AddonService:Load()
     local AddonsModule = require(Linker.Engine.Shared.Addons.Config)
 
-    local UnpackagedAddons = {}
     for _, Table in AddonsModule.Addons do
         print("[Server] [Engine.AddonService:Load] Loading: "..tostring(_))
         Table["Source"] = HttpService:GetAsync(Table["Source"])
@@ -46,11 +46,32 @@ function Engine.AddonService:Load()
     end
 end
 
-function Engine.AddonService:ReplicateToClient()
-    print("Nothing")
+function Engine.AddonService:ReplicateToClient(plr)
+    print(string.format("[Server] [Engine.AddonService:ReplicateToClient] Replicating All Addons to %s.", plr.Name))
+
+    for _, Addon in Engine.AddonService.RunningAddons do
+        print("[Server] [Engine.AddonService:ReplicateToClient] Replicating:",tostring(Addon.Config.Name))
+
+        --Convert table into json
+        local JSON_Packet = HttpService:JSONEncode(Addon)
+    
+        local Buffer = buffer.fromstring(tostring(JSON_Packet))
+
+        print("Buffer.len:", buffer.len(Buffer))
+        print("Buffer.tostring:",buffer.tostring(Buffer))
+    end
+end
+
+function Engine:PlayerAdded(plr)
+    print("[Server] [Engine:PlayerAdded] Player:", plr.Name,"Connected!")
+    task.wait(5)
+    print("[Server] [Engine:PlayerAdded] Replicating Addons to client!")
+    Engine.AddonService:ReplicateToClient(plr)
 end
 
 --Main/RunTime
 Engine.AddonService:Load()
 
-print("Engine.AddonService.RunningAddons:",Engine.AddonService.RunningAddons)
+Players.PlayerAdded:Connect(function(plr)
+    Engine:PlayerAdded(plr)
+end)

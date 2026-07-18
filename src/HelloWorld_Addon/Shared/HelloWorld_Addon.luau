@@ -1,7 +1,6 @@
 local RunService = game:GetService("RunService")
 
 local HelloWorld_Addon = {}
-HelloWorld_Addon.__index = HelloWorld_Addon
 
 HelloWorld_Addon.Config = {}
 HelloWorld_Addon.Config.Name = "HelloWorld_Addon"
@@ -31,14 +30,12 @@ end
 
 if RunService:IsClient() then
     function HelloWorld_Addon.Init()
-        setmetatable({}, HelloWorld_Addon)
         HelloWorld_Addon:Hello()
     end
 end
 
 if RunService:IsServer() then
     function HelloWorld_Addon.Init()
-        setmetatable({}, HelloWorld_Addon)
         HelloWorld_Addon:Hello()
     end
 end
