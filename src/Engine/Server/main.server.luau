@@ -54,7 +54,8 @@ function Engine.AddonService:ReplicateToClient(plr)
 
         --Convert table into json
         local JSON_Packet = HttpService:JSONEncode(Addon)
-    
+        print(JSON_Packet)
+
         local Buffer = buffer.fromstring(tostring(JSON_Packet))
 
         print("Buffer.len:", buffer.len(Buffer))

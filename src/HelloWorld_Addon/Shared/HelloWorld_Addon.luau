@@ -28,16 +28,15 @@ function HelloWorld_Addon:Hello()
     end
 end
 
-if RunService:IsClient() then
-    function HelloWorld_Addon.Init()
-        HelloWorld_Addon:Hello()
-    end
+HelloWorld_Addon.Server = {}
+HelloWorld_Addon.Client = {}
+
+function HelloWorld_Addon.Server:Init()
+    HelloWorld_Addon:Hello()
 end
 
-if RunService:IsServer() then
-    function HelloWorld_Addon.Init()
-        HelloWorld_Addon:Hello()
-    end
+function HelloWorld_Addon.Client:Init()
+    HelloWorld_Addon:Hello()
 end
 
 return HelloWorld_Addon
