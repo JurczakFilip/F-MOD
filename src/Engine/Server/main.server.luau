@@ -14,26 +14,36 @@ function Engine.AddonService:Load()
 
     local UnpackagedAddons = {}
     for _, Table in AddonsModule.Addons do
-        print("[Server] [Engine.AddonService:CollectAddons] Loading: "..tostring(_))
+        print("[Server] [Engine.AddonService:Load] Loading: "..tostring(_))
         Table["Source"] = HttpService:GetAsync(Table["Source"])
 
-        local success, Module = pcall(function()
+        local success, Addon = pcall(function()
             return loadstring(Table["Source"])()
         end)
         
         if success then
-            print("Successfully loaded Addon: ")
+            print("[Server] [Engine.AddonService:Load] Successfully loaded Addon:",tostring(Addon.Config.Name))
+            print("[Server] [Engine.AddonService:Load] Initializing Addon:",tostring(Addon.Config.Name))
+            local success, init = pcall(function()
+                if Table["UserConfig"] then
+                    Addon.UserConfig = Table["UserConfig"]
+                end
+                return Addon.Init()
+            end)
+            if success then 
+                print("[Server] [Engine.AddonService:Load] Successfully Initialized Addon:",tostring(Addon.Config.Name))
+            else
+                print("Failed to Initialize Addon:", tostring(Addon.Config.Name))
+            end
+        else
+            print("[Server] [Engine.AddonService:Load] Failed to load:",tostring(_))
+            return
         end
 
         UnpackagedAddons[_] = Table
     end
-
-    print("[Server] [Engine.AddonService:CollectAddons] Returning Addons for init...")
-    return UnpackagedAddons
 end
 
 --Main/RunTime
-print("SERVER RUNNING")
+Engine.AddonService:Load()
 
-local Addons = Engine.AddonService:Load()
-print("Addons:", Addons)
