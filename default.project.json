@@ -1,0 +1,22 @@
+{
+  "name": "F-MOD",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "Engine": {"$path": "src/Engine/Shared", "$ignoreUnknownInstances": true},
+      "HelloWorld_Addon": {"$path": "src/HelloWorld_Addon/Shared"},
+      "linker": {"$path": "src/linker.luau"}
+    },
+
+    "ServerScriptService": {
+      "Engine": {"$path": "src/Engine/Server"}
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Engine": {"$path": "src/Engine/Client"}
+      }
+    }
+  }
+}
