@@ -6,10 +6,22 @@ local Linker = require(ReplicatedStorage:WaitForChild("linker"))
 
 --InitScript
 local Engine = {}
+Engine.AddonService = {}
 -- Load Addons
-function Engine:LoadAddons()
-    
+function Engine.AddonService:Load()
+    local AddonsModule = require(Linker.Engine.Shared.Addons.Config)
+
+    local UnpackagedAddons = {}
+    for _, Table in AddonsModule.Addons do
+        print("[Client] [Engine.AddonService:CollectAddons] Loading: "..tostring(_))
+        Table["Source"] = game:HttpGet(Table["Source"])
+        UnpackagedAddons[_] = Table
+    end
+
+    print("[Client] [Engine.AddonService:CollectAddons] Returning Addons for init...")
+    return UnpackagedAddons
 end
 
 --Main/RunTime
-Engine:LoadAddons()
+--local Addons = Engine.AddonService:Load()
+--print("Addons:", Addons)
