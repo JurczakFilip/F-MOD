@@ -9,7 +9,7 @@ local Linker = require(ReplicatedStorage:WaitForChild("linker"))
 --InitScript
 local Engine = {}
 Engine.AddonService = {}
-Engine.AddonService.RunningAddons = {}
+Engine.AddonService.AddonsToSendToClient = {}
 -- Load Addons
 function Engine.AddonService:Load()
     local AddonsModule = require(Linker.Engine.Shared.Addons.Config)
@@ -47,11 +47,25 @@ function Engine.AddonService:Load()
             warn(string.format("[Server] [Engine.AddonService] Failed to unpack addon: %s", _))
             return
         else
-            print(string.format("[Server] [Engine.AddonService] Successfully Unpacked Addon: [%s] - %s",_, Addon.Config.Name))
+            print(string.format("[Server] [Engine.AddonService] Successfully Unpacked Addon: %s",_))
         end
+
+        print(Addon["Contents"])
+        local contents = Addon["Contents"]
+        local code = nil
+        success, code = pcall(function()
+            return loadstring(contents)()
+        end)
+
+        if not success then
+            warn(string.format("[Server] [Engine.AddonService Failed to unpack Addon Code: %s",_))
+        else
+            print(code)
+        end
+
     end
 end
 
 --Main/RunTime
 Engine.AddonService:Load()
-print("[Engine.AddonService.RunningAddons:",Engine.AddonService.RunningAddons)
+print("[Engine.AddonService.AddonsToSendToClient]:",Engine.AddonService.AddonsToSendToClient)

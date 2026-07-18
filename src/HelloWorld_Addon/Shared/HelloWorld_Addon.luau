@@ -40,6 +40,8 @@ HelloWorld_Addon.Contents = [[
     function HelloWorld_Addon.Client:Init()
         HelloWorld_Addon:Hello()
     end
+    
+    return HelloWorld_Addon
 ]]
 
 return HelloWorld_Addon
