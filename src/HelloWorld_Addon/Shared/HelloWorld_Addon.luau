@@ -1,5 +1,3 @@
-local RunService = game:GetService("RunService")
-
 local HelloWorld_Addon = {}
 
 HelloWorld_Addon.Config = {}
@@ -11,6 +9,7 @@ HelloWorld_Addon.Config.User = {
 }
 
 HelloWorld_Addon.Code = [[
+local RunService = game:GetService("RunService")
 
 function HelloWorld_Addon:Hello()
     if RunService:IsClient() then
