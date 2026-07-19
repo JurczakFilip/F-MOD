@@ -33,36 +33,23 @@ function Engine.AddonService:Load()
                 task.wait(1)
             end
         end
-        -- If Unsuccessfuly to load addon
+        --Abord after 3 failed attempts
         if not success then
-            warn(string.format("[Server] [Engine.AddonService] Aborting Addon: %s", _))
-            return
+            warn(string.format("[Server] [Engine.AddonService] Aboorting addon: %s", _))
         end
-
-        success, Addon = pcall(function()
+        
+        -- Unpack for meta data
+        local MetaData = nil
+        success, MetaData = pcall(function()
+            print(string.format("[Server] [Engine.AddonService] Unpacking Addon: %s", _))
             return loadstring(Addon)()
         end)
 
         if not success then
-            warn(string.format("[Server] [Engine.AddonService] Failed to unpack addon: %s", _))
-            return
-        else
-            print(string.format("[Server] [Engine.AddonService] Successfully Unpacked Addon: %s",_))
+            warn(string.format("[Server] [Engine.AddonService] Failed to unpack Addon: %s", _))
         end
 
-        print(Addon["Contents"])
-        local contents = Addon["Contents"]
-        local code = nil
-        success, code = pcall(function()
-            return loadstring(contents)()
-        end)
-
-        if not success then
-            warn(string.format("[Server] [Engine.AddonService Failed to unpack Addon Code: %s",_))
-        else
-            print(code)
-        end
-
+        print("METADATA:",MetaData)
     end
 end
 

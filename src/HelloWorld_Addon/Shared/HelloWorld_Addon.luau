@@ -1,47 +1,45 @@
-local HelloWorld_Addon = {}
+return { 
+    MetaData = {
+        Name        = "Hello World Addon",
+        Description = "My Hello World Addon!",
+        Config      = {
+            CustomMessage = nil
+        }
+    },
 
-HelloWorld_Addon.Contents = [[
+    Code = [[
+    -- Any services you want
     local RunService = game:GetService("RunService")
 
-    local HelloWorld_Addon = {}
-    HelloWorld_Addon.Config = {}
-    HelloWorld_Addon.Config.Name = "HelloWorld_Addon"
-    HelloWorld_Addon.Config.Description = "My Amazing Hello World Addon!"
+    --Addon Setup
+    local HelloWorldAddon = {}
+    HelloWorldAddon.Server = {}
+    HelloWorldAddon.Client = {}
+    HelloWorldAddon.Config = {}
 
-    HelloWorld_Addon.Config.User = {
-        UserMsg = nil
-    }
-
-    function HelloWorld_Addon:Hello()
+    -- Pre-defined functions here
+    function HelloWorldAddon:Hello()
         if RunService:IsClient() then
             print("Hello Client!")
-            
-            if HelloWorld_Addon.Config.User then
-                print("UserMsg:",HelloWorld_Addon.Config.User)
-            end
-        end
-
-        if RunService:IsServer() then
+        else
             print("Hello Server!")
+        end
 
-            if HelloWorld_Addon.Config.User then
-                print("UserMsg:",HelloWorld_Addon.Config.User)
-            end
+        if HelloWorldAddon.Config.CustomMessage then
+            print(string.format("[CUSTOM MESSAGE]: %s", HelloWorldAddon.Config.CustomMessage))
         end
     end
 
-    HelloWorld_Addon.Server = {}
-    HelloWorld_Addon.Client = {}
-
-    function HelloWorld_Addon.Server:Init()
-        HelloWorld_Addon:Hello()
+    -- Run Code for Server Here
+    function HelloWorldAddon.Server:Init()
+        HelloWorldAddon:Hello()
     end
 
-    function HelloWorld_Addon.Client:Init()
-        HelloWorld_Addon:Hello()
+    -- Run Code for Client Here
+    function HelloWorldAddon.Client:Init()
+        HelloWorldAddon:Hello()
     end
-    
-    return HelloWorld_Addon
+
+    return HelloWorldAddon
 ]]
-
-return HelloWorld_Addon
+}
