@@ -2,6 +2,7 @@ return {
     MetaData = {
         Name        = "Hello World Addon",
         Description = "My Hello World Addon!",
+        Version     = "1.0.0",
         Config      = {
             CustomMessage = nil
         }
