@@ -38,6 +38,7 @@ function Engine.AddonService:Load()
         --Abord after 3 failed attempts
         if not success then
             warn(string.format("[Server] [Engine.AddonService] Aboorting addon: %s", _))
+            return
         end
         
         -- Unpack for meta data
@@ -49,6 +50,7 @@ function Engine.AddonService:Load()
 
         if not success then
             warn(string.format("[Server] [Engine.AddonService] Failed to unpack Addon: %s", _))
+            return
         end
 
         print(string.format("[Server] [Engine.AddonService] Successfully Unpacked: [%s] - %s", _, Data["MetaData"]["Name"]))
@@ -72,6 +74,7 @@ function Engine.AddonService:Load()
 
         if not success then 
             warn(string.format("[Server] [Engine.AddonService] Failed to initialize code! [%s] - [%s]", _, Data["MetaData"]["Name"]))
+            return
         end
 
         print(string.format("[Server] [Engine.AddonService] Successfully initialized: [%s] - [%s]", _, Data["MetaData"]["Name"]))
@@ -80,51 +83,5 @@ function Engine.AddonService:Load()
     end
 end
 
-function Engine.AddonService:SendAddonsToClient(plr)
-    print(string.format("[Server] [Engine.AddonService] Sending Addons to: %s", plr["Name"]))
-    task.wait(3)
-
-    for _, Addon in Engine.AddonService.AddonsToSendToClient do
-        print(string.format("[Server] [Engine.AddonService] Sending: [%s] - %s",_, Addon["MetaData"]["Name"]))
-        
-        local success, JSON_ENCODED = pcall(function()
-            return HttpService:JSONEncode(Addon)
-        end)
-        
-        if not success then
-            warn(string.format("[Server] [Engine.AddonService] Failed to encode Addon into JSON: [%s] - %s", _, Addon["MetaData"]["Name"]))
-        end
-
-        local Buffer
-        success, Buffer = pcall(function()
-            return buffer.fromstring(JSON_ENCODED)
-        end)
-
-        if not success then
-            warn(string.format("[Server] [Engine.AddonService] Failed to set Buffer for: [%s] - %s", _, Addon["MetaData"]["Name"]))
-        end
-
-        local CompressedBuffer 
-        success, CompressedBuffer = pcall(function()
-            return EncodingService:CompressBuffer(Buffer, Enum.CompressionAlgorithm.Zstd, 9)
-        end)
-
-        if not success then
-            warn(string.format("[Server] [Engine.AddonService] Failed to compress Buffer for: [%s] - %s", _, Addon["MetaData"]["Name"]))
-        end
-
-        print(string.format("[Server] [Engine.AddonService] Before Addon Compression: %s", buffer.len(Buffer)))
-        print(string.format("[Server] [Engine.AddonService] After Addon Compression: %s", buffer.len(CompressedBuffer)))
-
-        print(string.format("[Server] [Engine.AddonService] Sending now: %s", Addon["MetaData"]["Name"]))
-        Linker.Engine.Shared:WaitForChild("Remotes"):FindFirstChild("ReplicateAddons"):FireClient(plr, CompressedBuffer)
-    end
-
-end
-
 --Main/RunTime
 Engine.AddonService:Load()
-
-Players.PlayerAdded:Connect(function(plr)
-    Engine.AddonService:SendAddonsToClient(plr)
-end)

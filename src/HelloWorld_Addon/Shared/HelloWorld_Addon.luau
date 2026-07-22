@@ -14,17 +14,11 @@ return {
 
     --Addon Setup
     local HelloWorldAddon = {}
-    HelloWorldAddon.Server = {}
-    HelloWorldAddon.Client = {}
     HelloWorldAddon.Config = {}
 
     -- Pre-defined functions here
     function HelloWorldAddon:Hello()
-        if RunService:IsClient() then
-            print("Hello Client!")
-        else
-            print("Hello Server!")
-        end
+        print("Hello Client!")
 
         if HelloWorldAddon.Config.CustomMessage then
             print(string.format("[CUSTOM MESSAGE]: %s", HelloWorldAddon.Config.CustomMessage))
@@ -32,12 +26,7 @@ return {
     end
 
     -- Run Code for Server Here
-    function HelloWorldAddon.Server:Init()
-        HelloWorldAddon:Hello()
-    end
-
-    -- Run Code for Client Here
-    function HelloWorldAddon.Client:Init()
+    function HelloWorldAddon:Init()
         HelloWorldAddon:Hello()
     end
 
